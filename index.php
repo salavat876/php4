@@ -20,15 +20,11 @@
 </form>
 
     <?php $validate = valid($_POST); ?>
-
-    <?php if (!empty($validate['succes']) && $validate['succes']): ?>
-    <?php foreach ($validate['messages'] as $message): ?>
-    <p>
-        <?= $message; ?>
-    </p>
-
-        <?php endforeach; ?>
-    <?php endif; ?>
+    <?php if (!empty($validate['succes']) && $validate['succes']) {
+        foreach ($validate['messages'] as $message){
+           echo '<p>'.$message.'<p>';
+        }
+    } ?>
 
 <?php print_r($validate) ; ?>
 </body>
