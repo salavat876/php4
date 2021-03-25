@@ -5,8 +5,10 @@ function valid(array $post): array
     $validate = [
         'error' => false,
         'success' => false,
-        'messages' => []
+        'messages' => [],
     ];
+
+
 
     if (!empty($post['login']) && !empty($post['password']) && !empty($post['firstName']) && !empty($post['lastName'])) {
         $login = trim($post['login']); //trim - очищает строку
@@ -14,23 +16,24 @@ function valid(array $post): array
         $firstName = trim($post['password']);
         $lastName = trim($post['password']);
 
-        $contrains = [
+        $constrains = [
             'login' => 6,
             'password' => 7,
             'firstName' => preg_match("/^[а-яА-Я ]*$/", $firstName),
             'lastName' => preg_match("/^[а-яА-Я ]*$/", $lastName)
         ];
 
-        $validateForm = valigData($login, $password, $firstName, $lastName, $contrains);
+
+        $validateForm = valigData($login, $password, $firstName, $lastName, $constrains);
 
         if (!$validateForm['login']) {
             array_push($validate['messages'],
-                "логин должен быть длиной не менее чем {$contrains['login']} символов и содержать русские буквы");
+                "логин должен быть длиной не менее чем {$constrains['login']} символов");
         }
 
         if (!$validateForm['password']) {
             array_push($validate['messages'],
-                "пароль должен быть длиной не менее чем {$contrains['login']} символов");
+                "пароль должен быть длиной не менее чем {$constrains['password']} символов");
         }
 
         if (!$validateForm['firstName']) {
@@ -42,36 +45,45 @@ function valid(array $post): array
             array_push($validate['messages'],
                 "фамилия должна содержать только буквы и пробелы!");
         }
+        if (!$validate['error']){
+            $validate['success'] = true;
+            array_push($validate['messages'],"Ваш логин:{$login}",
+                "Ваш пароль:{$password}",
+                "Ваше имя:{$firstName}",
+                "Ваша фамилия:{$lastName}"
+            );
+        }
     }
     return $validate;
+
 }
 
-;
 
+function valigData(string $login, string $password,string $firstName,string $lastName,array $constrains): array{
 
-function valigData($login, $password, $firstName, $lastName, $contrains): array{
     $validateForm = [
         'login' => true,
         'password' => true,
-        'firstName' => true,
-        'lastName' => true
+        'firstName' => preg_match('/[^а-яА-Я\s]+/msi', $firstName),
+        'lastName' => preg_match('/[^а-яА-Я\s]+/msi', $lastName)
     ];
 
-    if (strlen($validateForm['login']) < $contrains['login']) {
+    if (strlen($login) < $constrains['login']) {
         $validateForm['login'] = false;
     }
 
-    if (strlen($validateForm['password']) < $contrains['login']) {
-        $validateForm['login'] = false;
+    if (strlen($password) < $constrains['password']) {
+        $validateForm['password'] = false;
     }
 
-    if (!$validateForm['firstName']) {
+    if (!$firstName) {
         $validateForm['firstName'] = false;
     }
 
-    if (!$validateForm['lastName']) {
+    if (!$lastName) {
         $validateForm['lastName'] = false;
     }
 
     return $validateForm;
+
 }
