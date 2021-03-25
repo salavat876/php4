@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<?php $validate = valid($_POST); ?>
 <form action="/" method="post" class="flex-block">
     <input type="text" name="firstName" value="">
     <input type="text" name="lastName">
@@ -19,13 +20,23 @@
     <button type="submit">Отправить</button>
 </form>
 
-    <?php $validate = valid($_POST); ?>
-    <?php if (!empty($validate['succes']) && $validate['succes']) {
-        foreach ($validate['messages'] as $message){
-           echo '<p>'.$message.'<p>';
-        }
-    } ?>
 
-<?php print_r($validate) ; ?>
+<?php if (!empty($validate['error']) && $validate['error']){
+    foreach( $validate['messages'] as $key => $value ) {
+        echo '<li>' . $key . ':'. $value . '</li>';
+    }
+
+}
+print_r($validate['success']);
+?>
+
+<?php if (!empty($validate['success']) && $validate['success']){
+    foreach( $validate['messages'] as $key => $value ) {
+        echo '<li>' . $key . ':'. $value . '</li>';
+    }
+}
+?>
+
 </body>
 </html>
+
